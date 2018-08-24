@@ -27,11 +27,9 @@ public final class PotatoBagUtil {
     }
 
     public static List<PotatoBag> getFilledPotatoBags() {
-        return IntStream.range(0, 5).
-                mapToObj(i -> {
-                    PotatoBag potatoBag = getFilledPotatoBag();
-                    return potatoBag;
-                }).collect(Collectors.toList());
+        return IntStream.range(0, 5)
+                .mapToObj(pb -> getFilledPotatoBag())
+                .collect(Collectors.toList());
     }
 
 

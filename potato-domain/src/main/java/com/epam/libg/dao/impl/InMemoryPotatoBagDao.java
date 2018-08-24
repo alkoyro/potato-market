@@ -34,6 +34,7 @@ public class InMemoryPotatoBagDao implements PotatoBagDao {
      * @param limit size to return
      * @return potatoBags
      */
+    @Override
     public List<PotatoBag> findPotatoBags(@NonNull Integer limit) {
         if (potatoBagMap.size() >= limit) {
             return new ArrayList<>(potatoBagMap.values()).subList(0, limit);
@@ -44,11 +45,13 @@ public class InMemoryPotatoBagDao implements PotatoBagDao {
 
     /**
      * generates {@link UUID} and defines it for {@link PotatoBag#id}
+     * and then puts potatoBag into container
      *
      * @param potatoBag potatoBag to add
      * @return created potatoBag
      * @throws AddPotatoBagException if adding operation failed
      */
+    @Override
     public PotatoBag addPotatoBag(@NonNull PotatoBag potatoBag) throws AddPotatoBagException {
         String id = UUID.randomUUID().toString();
         potatoBag.setId(id);
