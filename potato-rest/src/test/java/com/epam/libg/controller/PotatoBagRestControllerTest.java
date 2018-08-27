@@ -1,6 +1,5 @@
-package com.epam.libg.app;
+package com.epam.libg.controller;
 
-import com.epam.libg.controller.PotatoBagRestController;
 import com.epam.libg.converter.PotatoBagConverter;
 import com.epam.libg.domain.BagSupplier;
 import com.epam.libg.domain.PotatoBag;
