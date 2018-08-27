@@ -36,7 +36,7 @@ curl -XGET --header "Content-Type: application/json" http://localhost:8080/potat
 
 ## Logs <a name="markdown-logs"></a>
 
-log file **potato-market.logs** is located at the same location as **potato-rest-1.0.0-SNAPSHOT.jar**
+log file **potato-market.log** is located at the same location as **potato-rest-1.0.0-SNAPSHOT.jar**
 
 ## Debug <a name="markdown-debug"></a>
 To be able to debug app use
