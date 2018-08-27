@@ -32,8 +32,7 @@ public class InMemoryPotatoBagDaoTest {
     @Test
     public void testFindPotatoBags() {
         //given potatoBags
-        List<PotatoBag> givenPotatoBags = PotatoBagUtil.getFilledPotatoBags()
-                .subList(0, 3);
+        List<PotatoBag> givenPotatoBags = PotatoBagUtil.getFilledPotatoBags(3);
         givenPotatoBags.forEach(pb -> potatoBagMap.put(UUID.randomUUID().toString(), pb));
 
         //when limit > available size
@@ -57,7 +56,7 @@ public class InMemoryPotatoBagDaoTest {
     public void testAddPotatoBags() throws AddPotatoBagException {
 
         //given potatoBags with same id
-        List<PotatoBag> givenPotatoBags = PotatoBagUtil.getFilledPotatoBags();
+        List<PotatoBag> givenPotatoBags = PotatoBagUtil.getFilledPotatoBags(3);
         List<PotatoBag> exceptedPotatoBags = new ArrayList<>();
 
         //when add potatoBags

@@ -7,7 +7,6 @@ import com.epam.libg.exception.AddPotatoBagException;
 import com.epam.libg.service.PotatoBagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -28,11 +27,13 @@ public class PotatoBagServiceImpl implements PotatoBagService {
      */
     public static final Integer DEFAULT_LIMIT = 3;
 
-    @Autowired
-    private PotatoBagDao potatoBagDao;
+    private final PotatoBagDao potatoBagDao;
+    private final PotatoBagValidator potatoBagValidator;
 
-    @Autowired
-    private PotatoBagValidator potatoBagValidator;
+    public PotatoBagServiceImpl(PotatoBagDao potatoBagDao, PotatoBagValidator potatoBagValidator) {
+        this.potatoBagDao = potatoBagDao;
+        this.potatoBagValidator = potatoBagValidator;
+    }
 
     /**
      * finds potatoBags with optional limit value.
