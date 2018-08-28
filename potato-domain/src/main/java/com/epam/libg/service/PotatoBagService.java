@@ -5,6 +5,7 @@ import com.epam.libg.exception.AddPotatoBagException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -27,5 +28,5 @@ public interface PotatoBagService {
      * @return created potatoBag
      * @throws AddPotatoBagException if potatoBag failed to be added
      */
-    PotatoBag addPotatoBag(@NonNull PotatoBag potatoBag) throws AddPotatoBagException;
+    PotatoBag addPotatoBag(@NonNull @Valid PotatoBag potatoBag) throws AddPotatoBagException;
 }

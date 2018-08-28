@@ -1,5 +1,8 @@
 package com.epam.libg.domain;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -8,10 +11,21 @@ import java.util.Objects;
  * POJO represents Potato Bag entity
  */
 public class PotatoBag {
+
     private String id;
+
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 10)
     private Short potatosNumber;
+
+    @NotNull
     private BagSupplier bagSupplier;
+
+    @NotNull
     private Date packedDate;
+
+    @NotNull
     private BigDecimal price;
 
     public String getId() {

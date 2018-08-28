@@ -2,7 +2,6 @@ package com.epam.libg.service.impl;
 
 import com.epam.libg.dao.PotatoBagDao;
 import com.epam.libg.domain.PotatoBag;
-import com.epam.libg.domain.validator.PotatoBagValidator;
 import com.epam.libg.exception.AddPotatoBagException;
 import com.epam.libg.service.PotatoBagService;
 import org.slf4j.Logger;
@@ -10,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
  * Impl of {@link PotatoBagService}
  */
 @Service
+@Validated
 public class PotatoBagServiceImpl implements PotatoBagService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PotatoBagServiceImpl.class);
@@ -28,11 +30,9 @@ public class PotatoBagServiceImpl implements PotatoBagService {
     public static final Integer DEFAULT_LIMIT = 3;
 
     private final PotatoBagDao potatoBagDao;
-    private final PotatoBagValidator potatoBagValidator;
 
-    public PotatoBagServiceImpl(PotatoBagDao potatoBagDao, PotatoBagValidator potatoBagValidator) {
+    public PotatoBagServiceImpl(PotatoBagDao potatoBagDao) {
         this.potatoBagDao = potatoBagDao;
-        this.potatoBagValidator = potatoBagValidator;
     }
 
     /**
@@ -63,11 +63,6 @@ public class PotatoBagServiceImpl implements PotatoBagService {
     @Override
     public PotatoBag addPotatoBag(@NonNull PotatoBag potatoBag) throws AddPotatoBagException {
         LOGGER.info("adding potato bag: " + potatoBag);
-
-        if (!potatoBagValidator.validate(potatoBag)) {
-            LOGGER.error("error validating potato bag: " + potatoBag);
-            throw new AddPotatoBagException("potato bag validation failed: " + potatoBag);
-        }
 
         return potatoBagDao.addPotatoBag(potatoBag);
     }
