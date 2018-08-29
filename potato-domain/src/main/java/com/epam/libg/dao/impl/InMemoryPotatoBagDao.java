@@ -6,18 +6,15 @@ import com.epam.libg.exception.AddPotatoBagException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * represent in-memory impl of {@link PotatoBagDao}
  */
-@Repository
 public class InMemoryPotatoBagDao implements PotatoBagDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryPotatoBagDao.class);
 
@@ -44,8 +41,7 @@ public class InMemoryPotatoBagDao implements PotatoBagDao {
     }
 
     /**
-     * generates {@link UUID} and defines it for {@link PotatoBag#id}
-     * and then puts potatoBag into container
+     * performs validation of {@link PotatoBag} and put it into container
      *
      * @param potatoBag potatoBag to add
      * @return created potatoBag
@@ -53,9 +49,6 @@ public class InMemoryPotatoBagDao implements PotatoBagDao {
      */
     @Override
     public PotatoBag addPotatoBag(@NonNull PotatoBag potatoBag) throws AddPotatoBagException {
-        String id = UUID.randomUUID().toString();
-        potatoBag.setId(id);
-
         if (potatoBagMap.putIfAbsent(potatoBag.getId(), potatoBag) == null) {
             return potatoBag;
         } else {

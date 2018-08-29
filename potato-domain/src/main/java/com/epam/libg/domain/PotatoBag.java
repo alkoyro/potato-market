@@ -12,6 +12,7 @@ import java.util.Objects;
  */
 public class PotatoBag {
 
+    @NotNull
     private String id;
 
     @NotNull

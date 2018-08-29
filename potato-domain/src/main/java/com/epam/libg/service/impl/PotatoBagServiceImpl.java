@@ -8,18 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Impl of {@link PotatoBagService}
  */
-@Service
-@Validated
 public class PotatoBagServiceImpl implements PotatoBagService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PotatoBagServiceImpl.class);
@@ -54,7 +50,8 @@ public class PotatoBagServiceImpl implements PotatoBagService {
     }
 
     /**
-     * performs validation of {@link PotatoBag} and calls adding potatoBag to {@link PotatoBagDao}
+     * generates {@link UUID} and defines it for {@link PotatoBag#id}
+     * and then adds potatoBag to {@link PotatoBagDao}
      *
      * @param potatoBag to add
      * @return created potatoBag
@@ -63,6 +60,9 @@ public class PotatoBagServiceImpl implements PotatoBagService {
     @Override
     public PotatoBag addPotatoBag(@NonNull PotatoBag potatoBag) throws AddPotatoBagException {
         LOGGER.info("adding potato bag: " + potatoBag);
+
+        String id = UUID.randomUUID().toString();
+        potatoBag.setId(id);
 
         return potatoBagDao.addPotatoBag(potatoBag);
     }

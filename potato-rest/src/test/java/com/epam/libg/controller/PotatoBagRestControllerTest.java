@@ -38,9 +38,6 @@ public class PotatoBagRestControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private PotatoBagConverter potatoBagConverter;
-
     @MockBean
     private PotatoBagService potatoBagService;
 

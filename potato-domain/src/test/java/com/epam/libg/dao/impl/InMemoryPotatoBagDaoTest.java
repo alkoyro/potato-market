@@ -1,39 +1,53 @@
 package com.epam.libg.dao.impl;
 
+import com.epam.libg.ServiceContextConfiguration;
 import com.epam.libg.PotatoBagUtil;
 import com.epam.libg.dao.PotatoBagDao;
 import com.epam.libg.domain.PotatoBag;
 import com.epam.libg.exception.AddPotatoBagException;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@ContextConfiguration(
+        classes = {
+                ServiceContextConfiguration.class,
+                InMemoryPotatoBagDaoTest.TestServiceContextConfiguration.class})
 public class InMemoryPotatoBagDaoTest {
 
-    @Spy
-    private Map<String, PotatoBag> potatoBagMap = new HashMap<>();
+    @Autowired
+    private PotatoBagDao potatoBagDao;
 
-    @InjectMocks
-    private PotatoBagDao potatoBagDao = new InMemoryPotatoBagDao();
+    @TestConfiguration
+    static class TestServiceContextConfiguration {
+
+        @Bean
+        @Primary
+        public PotatoBagDao potatoBagDao() {
+            return new InMemoryPotatoBagDao();
+        }
+    }
 
     @Test
-    public void testFindPotatoBags() {
+    public void testFindPotatoBags() throws AddPotatoBagException {
         //given potatoBags
         List<PotatoBag> givenPotatoBags = PotatoBagUtil.getFilledPotatoBags(3);
-        givenPotatoBags.forEach(pb -> potatoBagMap.put(UUID.randomUUID().toString(), pb));
+        for (PotatoBag pb : givenPotatoBags) {
+            pb.setId(UUID.randomUUID().toString());
+            potatoBagDao.addPotatoBag(pb);
+        }
 
         //when limit > available size
         List<PotatoBag> actualPotatoBags = potatoBagDao.findPotatoBags(10);
@@ -53,28 +67,6 @@ public class InMemoryPotatoBagDaoTest {
     }
 
     @Test
-    public void testAddPotatoBags() throws AddPotatoBagException {
-
-        //given potatoBags with same id
-        List<PotatoBag> givenPotatoBags = PotatoBagUtil.getFilledPotatoBags(3);
-        List<PotatoBag> exceptedPotatoBags = new ArrayList<>();
-
-        //when add potatoBags
-        for (PotatoBag potatoBag : givenPotatoBags) {
-            exceptedPotatoBags.add(potatoBagDao.addPotatoBag(potatoBag));
-        }
-
-        //then expect all will be added with unique generated ids
-        Assert.assertEquals(givenPotatoBags.size(), exceptedPotatoBags.size());
-        long uniqueIdsSize = exceptedPotatoBags.stream()
-                .map(PotatoBag::getId)
-                .distinct()
-                .count();
-
-        Assert.assertEquals(uniqueIdsSize, givenPotatoBags.size());
-    }
-
-    @Test
     public void testAddPotatoBag() throws AddPotatoBagException {
 
         //given
@@ -88,19 +80,32 @@ public class InMemoryPotatoBagDaoTest {
         Assert.assertNotNull(returnedPotatoBag.getId());
     }
 
-    @Test(expected = AddPotatoBagException.class)
-    public void testFailAddPotatoBag() throws AddPotatoBagException {
+    @Test
+    public void testAddPotatoBagFailNotValid() {
 
         //given
-        PotatoBag mockedPotBag = mock(PotatoBag.class);
+        PotatoBag givenPotatoBag = new PotatoBag();
 
-        //given mock
-        when(mockedPotBag.getId()).thenReturn("123");
+        //when
+        Throwable throwable = Assertions.catchThrowable(() -> potatoBagDao.addPotatoBag(givenPotatoBag));
+
+        //then
+        Assert.assertNotNull(throwable);
+        Assert.assertTrue(throwable instanceof ConstraintViolationException);
+    }
+
+    @Test(expected = AddPotatoBagException.class)
+    public void testAddPotatoBagFailSameIds() throws AddPotatoBagException {
+
+        //given
+        PotatoBag potatoBag1 = PotatoBagUtil.getFilledPotatoBag();
+        PotatoBag potatoBag2 = PotatoBagUtil.getFilledPotatoBag();
+        potatoBag2.setId(potatoBag1.getId());
 
         //when adding two with the same id
-        potatoBagDao.addPotatoBag(mockedPotBag);
+        potatoBagDao.addPotatoBag(potatoBag1);
 
         //then throw exception
-        potatoBagDao.addPotatoBag(mockedPotBag);
+        potatoBagDao.addPotatoBag(potatoBag2);
     }
 }
