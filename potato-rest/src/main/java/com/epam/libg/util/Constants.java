@@ -8,4 +8,5 @@ public final class Constants {
     }
 
     public static final String CUSTOM_DATE_FORMAT = "dd-MM-yyyy hh:mm";
+    public static final String PRICE_FORMAT = "###.##";
 }

@@ -3,6 +3,7 @@ package com.epam.libg.controller;
 import com.epam.libg.domain.PotatoBag;
 import com.epam.libg.exception.AddPotatoBagException;
 import com.epam.libg.exception.ConvertingException;
+import com.epam.libg.model.ExpectedTypeFormat;
 import com.epam.libg.model.PotatoBagDTO;
 import com.epam.libg.service.PotatoBagService;
 import com.epam.libg.converter.PotatoBagConverter;
@@ -54,8 +55,9 @@ public class PotatoBagRestController {
     }
 
     @GetMapping
-    List<PotatoBagDTO> findAllPotatoBags(@RequestParam(required = false) Integer limit) {
-        //TODO add validation
+    List<PotatoBagDTO> findAllPotatoBags(@RequestParam(required = false)
+                                         @ExpectedTypeFormat(value = "limit value should a numeric value", example = "?limit=3")
+                                                 Integer limit) {
         List<PotatoBag> potatoBags = potatoBagService.findPotatoBags(limit);
         List<PotatoBagDTO> convertedPotatoBags = potatoBags.stream().
                 map(pb -> potatoBagConverter.convertPotatoBagToPotatoBagDTO(pb)).
